@@ -3,12 +3,11 @@ package ua.com.sergeiokon.controller;
 import com.amazonaws.services.s3.model.ObjectListing;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.sergeiokon.s3.S3FileService;
-
-import java.io.IOException;
 
 
 @Slf4j
@@ -34,7 +33,7 @@ public class S3Controller {
     @GetMapping("/download")
     public ResponseEntity<?> downloadFile(@RequestParam Long fileId,
                                           @RequestParam String path,
-                                          @RequestParam Long userId) throws IOException {
+                                          @RequestParam Long userId) {
         s3FileService.downloadFile(fileId, path, userId);
         return ResponseEntity.ok("File downloaded successful");
     }
@@ -42,19 +41,12 @@ public class S3Controller {
     @GetMapping("/{id}")
     public ResponseEntity<?> deleteFile(@PathVariable String id) {
         s3FileService.deleteFileByIdFromS3(Long.parseLong(id));
-        return ResponseEntity.ok("File deleted successful");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(
             IllegalArgumentException ex) {
-        log.error(ex.getMessage());
-        return ResponseEntity.badRequest().body(ex.getMessage());
-    }
-
-    @ExceptionHandler(IOException.class)
-    public ResponseEntity<?> handleIllegalArgumentException(
-            IOException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.badRequest().body(ex.getMessage());
     }

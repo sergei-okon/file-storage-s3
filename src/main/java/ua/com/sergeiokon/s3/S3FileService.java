@@ -66,20 +66,23 @@ public class S3FileService {
         createEvent(file, user, Operation.UPLOAD);
     }
 
-    public void downloadFile(Long fileId, String path, Long userId) throws IOException {
+    public void downloadFile(Long fileId, String path, Long userId) {
         User user = userService.findById(userId);
         File file = fileService.findById(fileId);
         java.io.File fileToDownload = new java.io.File(path);
+        try {
+            if (!fileToDownload.createNewFile()) {
+                throw new IOException("Unable to create file with path " + path);
+            } else {
+                AmazonS3 s3client = s3Connector.getS3client();
+                S3Object s3object = s3client.getObject(file.getBucket(), file.getLocation());
+                S3ObjectInputStream inputStream = s3object.getObjectContent();
+                FileUtils.copyInputStreamToFile(inputStream, fileToDownload);
 
-        if (!fileToDownload.createNewFile()) {
-            throw new IOException("Unable to create file with path " + path);
-        } else {
-            AmazonS3 s3client = s3Connector.getS3client();
-            S3Object s3object = s3client.getObject(file.getBucket(), file.getLocation());
-            S3ObjectInputStream inputStream = s3object.getObjectContent();
-            FileUtils.copyInputStreamToFile(inputStream, fileToDownload);
-
-            createEvent(file, user, Operation.DOWNLOAD);
+                createEvent(file, user, Operation.DOWNLOAD);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
