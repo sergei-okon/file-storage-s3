@@ -13,7 +13,7 @@ import ua.com.sergeiokon.s3.S3FileService;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/s3")
+@RequestMapping("/v1/s3")
 public class S3Controller {
 
     private final S3FileService s3FileService;

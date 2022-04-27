@@ -1,16 +1,6 @@
 {
   "properties": [
     {
-      "name": "aws.access",
-      "type": "java.lang.String",
-      "description": "Description for aws.key.access."
-    },
-    {
-      "name": "aws.secret",
-      "type": "java.lang.String",
-      "description": "Description for aws.key.secret."
-    },
-    {
       "name": "aws.bucket",
       "type": "java.lang.String",
       "description": "Description for aws.bucket."

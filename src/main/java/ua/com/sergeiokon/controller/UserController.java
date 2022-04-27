@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import ua.com.sergeiokon.repository.entity.User;
 import ua.com.sergeiokon.service.UserService;
 
+import javax.validation.Valid;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -30,13 +32,13 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
         User savedUser = userService.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
     @PutMapping
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
+    public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
         User updatedUser = userService.update(user);
         return ResponseEntity.ok(updatedUser);
     }
@@ -50,6 +52,13 @@ public class UserController {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(
             IllegalArgumentException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(
+            SQLIntegrityConstraintViolationException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.badRequest().body(ex.getMessage());
     }

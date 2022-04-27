@@ -14,9 +14,10 @@ public class S3BucketService {
 
     private final S3Connector s3Connector;
 
-    public S3BucketService(S3Connector s3Connector) {
+    public S3BucketService(ua.com.sergeiokon.s3.S3Connector s3Connector) {
         this.s3Connector = s3Connector;
     }
+
 
     public void createBucket() {
         AmazonS3 s3client = s3Connector.getS3client();

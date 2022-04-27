@@ -31,10 +31,10 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class S3FileService {
 
-    private final S3Connector s3Connector;
     private final FileService fileService;
     private final UserService userService;
     private final EventService eventService;
+    private final S3Connector s3Connector;
 
     @Value("${aws.bucket}")
     private String bucket;
@@ -69,7 +69,9 @@ public class S3FileService {
     public void downloadFile(Long fileId, String path, Long userId) {
         User user = userService.findById(userId);
         File file = fileService.findById(fileId);
-        java.io.File fileToDownload = new java.io.File(path);
+        java.io.File fileToDownload = new java.io.File(path + file.getFileName());
+        if (fileToDownload.exists())
+            FileUtils.deleteQuietly(fileToDownload);
         try {
             if (!fileToDownload.createNewFile()) {
                 throw new IOException("Unable to create file with path " + path);

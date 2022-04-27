@@ -5,34 +5,38 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.com.sergeiokon.converter.EventConverter;
+import ua.com.sergeiokon.model.dto.EventDto;
 import ua.com.sergeiokon.repository.entity.Event;
 import ua.com.sergeiokon.service.EventService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/events")
+@RequestMapping("/v1/events")
 public class EventController {
 
     private final EventService eventService;
 
     @GetMapping
-    public ResponseEntity<List<Event>> getFiles() {
-        return ResponseEntity.ok(eventService.findAll());
+    public ResponseEntity<List<EventDto>> getFiles() {
+        return ResponseEntity.ok(eventService.findAll().stream()
+                .map(EventConverter::convertToDto)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Event> getEvent(@PathVariable("id") Long id) {
-        Event event = eventService.findById(id);
-        return ResponseEntity.ok(event);
+    public ResponseEntity<EventDto> getEvent(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(EventConverter.convertToDto(eventService.findById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<Event> addEvent(@RequestBody Event event) {
-        Event savedEvent = eventService.save(event);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedEvent);
+    public ResponseEntity<EventDto> addEvent(@RequestBody Event event) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(EventConverter.convertToDto(eventService.save(event)));
     }
 
     @PutMapping

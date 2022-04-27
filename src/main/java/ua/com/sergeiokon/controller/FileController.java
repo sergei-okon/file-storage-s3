@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/files")
+@RequestMapping("/v1/files")
 public class FileController {
 
     private final FileService fileService;

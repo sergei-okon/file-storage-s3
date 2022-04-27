@@ -17,15 +17,12 @@ public class File {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "file_name", nullable = false, length = 100)
+    @Column(name = "file_name", nullable = false)
     private String fileName;
 
-    @Column(name = "location", nullable = false, length = 1020)
+    @Column(name = "location", nullable = false)
     private String location;
 
-    @Column(name = "bucket")
+    @Column(name = "bucket", nullable = false)
     private String bucket;
-
-    public File(String originalFilename) {
-    }
 }

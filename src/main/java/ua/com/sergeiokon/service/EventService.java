@@ -2,10 +2,12 @@ package ua.com.sergeiokon.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ua.com.sergeiokon.converter.EventConverter;
 import ua.com.sergeiokon.repository.EventRepository;
 import ua.com.sergeiokon.repository.entity.Event;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

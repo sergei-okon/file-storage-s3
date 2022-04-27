@@ -1,10 +1,12 @@
 package ua.com.sergeiokon.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.List;
 
 @Entity
@@ -21,17 +23,22 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "email")
+    @Email
+    @Column(name = "email", unique = true)
     private String email;
+
+    @Column(name = "password")
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "active")
+    private boolean active;
 
-    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "user")
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private List<Event> events;
 }
 
