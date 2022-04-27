@@ -31,9 +31,6 @@ public class Event {
     @Column(name = "created")
     private LocalDateTime created;
 
-    @Column(name = "updated")
-    private LocalDateTime updated;
-
     @Column(name = "operation")
     private Operation Operation;
 }

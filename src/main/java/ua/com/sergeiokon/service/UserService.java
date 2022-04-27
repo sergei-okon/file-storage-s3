@@ -24,19 +24,29 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + id + " not found"));
     }
 
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User with   " + email + " not found"));
+    }
+
     public User save(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return userRepository.save(user);
-        } else {
-            throw new IllegalArgumentException("The user with this " + user.getEmail() + " is already registered");
+        if (user != null) {
+            if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                return userRepository.save(user);
+            } else {
+                throw new IllegalArgumentException("The user with this " + user.getEmail() + " is already registered");
+            }
         }
+        return null;
     }
 
     public User update(User user) {
-        User userUpdated = userRepository.findById(user.getId())
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + user.getId() + " not found"));
-        return userRepository.save(user);
+        if (userRepository.findById(user.getId()).isPresent()) {
+            return userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("User with id " + user.getId() + " not found");
+        }
     }
 
     public void deleteById(Long id) {

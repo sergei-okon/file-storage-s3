@@ -13,6 +13,5 @@ public class EventDto {
     private User user;
     private File file;
     private LocalDateTime created;
-    private LocalDateTime updated;
     private ua.com.sergeiokon.repository.entity.Operation Operation;
 }

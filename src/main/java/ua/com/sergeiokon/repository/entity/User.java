@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -27,6 +28,7 @@ public class User {
     @Column(name = "email", unique = true)
     private String email;
 
+    @NonNull
     @Column(name = "password")
     private String password;
 
@@ -38,7 +40,7 @@ public class User {
     private boolean active;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     private List<Event> events;
 }
 

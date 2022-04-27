@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ua.com.sergeiokon.repository.UserRepository;
 
 @SpringBootApplication
-//@EnableJpaRepositories(basePackageClasses = UserRepository.class)
 public class FileStorageS3Application {
 
     public static void main(String[] args) {

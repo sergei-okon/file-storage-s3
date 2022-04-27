@@ -32,7 +32,6 @@ public class EventConverter {
                 eventDto.setFile(event.getFile());
             }
             eventDto.setCreated(event.getCreated());
-            eventDto.setUpdated(event.getUpdated());
             eventDto.setOperation(event.getOperation());
         }
         return eventDto;
@@ -56,7 +55,6 @@ public class EventConverter {
                 event.setFile(eventDto.getFile());
             }
             event.setCreated(eventDto.getCreated());
-            event.setUpdated(eventDto.getUpdated());
             event.setOperation(eventDto.getOperation());
         }
         return event;

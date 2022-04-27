@@ -5,12 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ua.com.sergeiokon.converter.UserConverter;
+import ua.com.sergeiokon.model.dto.UserDto;
 import ua.com.sergeiokon.repository.entity.User;
 import ua.com.sergeiokon.service.UserService;
 
 import javax.validation.Valid;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -21,26 +24,28 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok(userService.findAll());
+    public ResponseEntity<List<UserDto>> getUsers() {
+        return ResponseEntity.ok(userService.findAll().stream()
+                .map(UserConverter::convertToDto)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable("id") Long id) {
-        User user = userService.findById(id);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserDto> getUser(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(UserConverter.convertToDto(userService.findById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        User savedUser = userService.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    public ResponseEntity<UserDto> addUser(@Valid @RequestBody UserDto userDto) {
+        User savedUser = userService.save(UserConverter.convertToEntity(userDto));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(UserConverter.convertToDto(savedUser));
     }
 
     @PutMapping
-    public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
-        User updatedUser = userService.update(user);
-        return ResponseEntity.ok(updatedUser);
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto) {
+        User updatedUser = userService.update(UserConverter.convertToEntity(userDto));
+        return ResponseEntity.ok(UserConverter.convertToDto(userService.update(updatedUser)));
     }
 
     @DeleteMapping("/{id}")

@@ -20,7 +20,7 @@ public class SecurityUser implements UserDetails {
     private List<GrantedAuthority> authorities;
 
     public SecurityUser(User user) {
-        this.userName = user.getName();
+        this.userName = user.getEmail();
         this.password = user.getPassword();
         this.active = user.isActive();
         this.authorities = Arrays.stream(user.getRole().toString().split(","))

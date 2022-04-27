@@ -101,7 +101,7 @@ public class S3FileService {
 
     private java.io.File convertMultiPartToFile(MultipartFile file) {
         java.io.File convFile = new java.io.File(Objects.requireNonNull(file.getOriginalFilename()));
-        try (FileOutputStream fos = new FileOutputStream(String.valueOf(convFile));) {
+        try (FileOutputStream fos = new FileOutputStream(String.valueOf(convFile))) {
             fos.write(file.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
@@ -114,7 +114,6 @@ public class S3FileService {
         event.setFile(file);
         event.setUser(user);
         event.setCreated(LocalDateTime.now());
-        event.setUpdated(LocalDateTime.now());
         event.setOperation(operation);
         eventService.save(event);
     }
