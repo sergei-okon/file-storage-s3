@@ -1,3 +1,4 @@
-install: gradle assemble
+install:
+  true
 
 language: java
