@@ -1,4 +1,3 @@
-install:
-  true
-
 language: java
+sudo: false
+script: ./gradlew check
