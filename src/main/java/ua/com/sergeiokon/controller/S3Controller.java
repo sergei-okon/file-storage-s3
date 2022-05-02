@@ -3,7 +3,6 @@ package ua.com.sergeiokon.controller;
 import com.amazonaws.services.s3.model.ObjectListing;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,12 +41,6 @@ public class S3Controller {
         s3FileService.downloadFile(fileId, path, userId);
         return ResponseEntity.ok("File downloaded successful");
     }
-
-//    @GetMapping("/{id}")
-//    public ResponseEntity<?> deleteFile(@PathVariable String id) {
-//        s3FileService.deleteFileByIdFromS3(Long.parseLong(id));
-//        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(

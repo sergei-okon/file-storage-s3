@@ -2,11 +2,16 @@ package ua.com.sergeiokon.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import ua.com.sergeiokon.model.dto.EventDto;
 import ua.com.sergeiokon.repository.EventRepository;
 import ua.com.sergeiokon.repository.entity.Event;
+import ua.com.sergeiokon.repository.entity.File;
+import ua.com.sergeiokon.repository.entity.Operation;
+import ua.com.sergeiokon.repository.entity.User;
 
+import java.time.LocalDateTime;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.mock;
@@ -14,9 +19,7 @@ import static org.mockito.Mockito.verify;
 
 class EventServiceTest {
 
-    @Mock
     EventRepository eventRepositoryMock;
-    @InjectMocks
     EventService eventService;
 
     @BeforeEach
@@ -43,7 +46,19 @@ class EventServiceTest {
     @Test
     void save_Success() {
         Event event = new Event();
-        eventService.save(event);
-        verify(eventRepositoryMock).save(event);
+        event.setFile(new File());
+        event.setUser(new User());
+        event.setCreated(LocalDateTime.now());
+        event.setOperation(Operation.UPLOAD);
+
+        EventDto eventDto = new EventDto();
+        eventDto.setFileId(1l);
+        eventDto.setUserId(1l);
+        eventDto.setCreated(LocalDateTime.now());
+        eventDto.setOperation(Operation.UPLOAD);
+
+        when(eventRepositoryMock.save(any())).thenReturn(event);
+        eventService.save(eventDto);
+        verify(eventRepositoryMock).save(any());
     }
 }

@@ -2,8 +2,7 @@ package ua.com.sergeiokon.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import ua.com.sergeiokon.model.dto.FileDto;
 import ua.com.sergeiokon.repository.FileRepository;
 import ua.com.sergeiokon.repository.entity.File;
 
@@ -12,9 +11,7 @@ import static org.mockito.Mockito.*;
 
 class FileServiceTest {
 
-    @Mock
     FileRepository fileRepositoryMock;
-    @InjectMocks
     FileService fileService;
 
     @BeforeEach
@@ -40,16 +37,17 @@ class FileServiceTest {
 
     @Test
     void save_Success() {
-        File file = new File();
-        fileService.save(file);
-        verify(fileRepositoryMock).save(file);
+        File file = createFile();
+        FileDto fileDto = createFileDto();
+        when(fileRepositoryMock.save(any())).thenReturn(file);
+        fileService.save(fileDto);
+        verify(fileRepositoryMock).save(any());
     }
 
     @Test
     void deleteById_Success() {
         Long id = 1L;
         File file = new File();
-        file.setId(id);
         when(fileRepositoryMock.findById(anyLong())).thenReturn(java.util.Optional.of(file));
         fileService.deleteById(id);
         verify(fileRepositoryMock).deleteById(id);
@@ -57,10 +55,30 @@ class FileServiceTest {
 
     @Test
     void update_Success() {
-        File file = new File();
-        file.setId(1L);
+        File file = createFile();
+        FileDto fileDto = createFileDto();
+
         when(fileRepositoryMock.findById(anyLong())).thenReturn(java.util.Optional.of(file));
-        fileService.update(file);
+        when(fileRepositoryMock.save(any())).thenReturn(file);
+        fileService.update(fileDto);
         verify(fileRepositoryMock).save(file);
+    }
+
+    private File createFile() {
+        File file = new File();
+        file.setId(1l);
+        file.setFileName("java.doc");
+        file.setBucket("develop");
+        file.setLocation("c://doc//");
+        return file;
+    }
+
+    private FileDto createFileDto() {
+        FileDto fileDto = new FileDto();
+        fileDto.setId(1l);
+        fileDto.setFileName("java.doc");
+        fileDto.setBucket("develop");
+        fileDto.setLocation("c://doc//");
+        return fileDto;
     }
 }

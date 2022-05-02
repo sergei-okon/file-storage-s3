@@ -5,13 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.com.sergeiokon.converter.FileConverter;
 import ua.com.sergeiokon.model.dto.FileDto;
-import ua.com.sergeiokon.repository.entity.File;
 import ua.com.sergeiokon.service.FileService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -23,26 +20,23 @@ public class FileController {
 
     @GetMapping
     public ResponseEntity<List<FileDto>> getFiles() {
-        return ResponseEntity.ok(fileService.findAll().stream()
-                .map(FileConverter::convertToDto)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(fileService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FileDto> getFile(@PathVariable("id") Long id) {
-        File file = fileService.findById(id);
-        return ResponseEntity.ok(FileConverter.convertToDto(file));
+        return ResponseEntity.ok(fileService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<FileDto> addFile(@RequestBody File file) {
+    public ResponseEntity<FileDto> addFile(@RequestBody FileDto fileDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(FileConverter.convertToDto(fileService.save(file)));
+                .body(fileService.save(fileDto));
     }
 
     @PutMapping
-    public ResponseEntity<FileDto> updateFile(@RequestBody File file) {
-        return ResponseEntity.ok(FileConverter.convertToDto(fileService.update(file)));
+    public ResponseEntity<FileDto> updateFile(@RequestBody FileDto fileDto) {
+        return ResponseEntity.ok(fileService.update(fileDto));
     }
 
     @DeleteMapping("/{id}")

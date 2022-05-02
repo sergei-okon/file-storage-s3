@@ -8,6 +8,6 @@ public class WelcomeController {
 
     @GetMapping("/v1/")
     public String welcome() {
-        return "WELCOME";
+        return "WELCOME TO FILE-STORAGE-S3";
     }
 }

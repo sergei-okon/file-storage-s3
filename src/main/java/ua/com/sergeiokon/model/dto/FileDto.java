@@ -9,5 +9,4 @@ public class FileDto {
     private String fileName;
     private String location;
     private String bucket;
-
 }

@@ -1,9 +1,7 @@
 package ua.com.sergeiokon.model.dto;
 
 import lombok.Data;
-import ua.com.sergeiokon.repository.entity.Event;
 import ua.com.sergeiokon.repository.entity.Role;
-import ua.com.sergeiokon.repository.entity.User;
 
 import java.util.List;
 

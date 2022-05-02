@@ -2,8 +2,8 @@ package ua.com.sergeiokon.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ua.com.sergeiokon.model.dto.UserDto;
 import ua.com.sergeiokon.repository.UserRepository;
 import ua.com.sergeiokon.repository.entity.Role;
 import ua.com.sergeiokon.repository.entity.User;
@@ -15,11 +15,8 @@ import static org.mockito.Mockito.*;
 
 class UserServiceTest {
 
-    @Mock
     UserRepository userRepositoryMock;
-    @Mock
     PasswordEncoder passwordEncoderMock;
-
     UserService userService;
 
     @BeforeEach
@@ -57,26 +54,20 @@ class UserServiceTest {
 
     @Test
     void save_Success() {
-        User user = new User();
-        user.setId(1L);
-        user.setName("Oleg");
-        user.setEmail("a@gmail.com");
-        user.setPassword("111");
-        user.setRole(Role.ADMIN);
-        user.setActive(true);
-        user.setEvents(new ArrayList<>());
-        when(userRepositoryMock.save(any(User.class))).thenReturn(user);
-        when(passwordEncoderMock.encode(anyString())).thenReturn("111");
+        UserDto userDto = createUserDto();
+        User user = createUser();
 
-        userService.save(user);
-        verify(userRepositoryMock).save(user);
+        when(userRepositoryMock.findById(anyLong())).thenReturn(java.util.Optional.of(user));
+        when(userRepositoryMock.save(any())).thenReturn(user);
+        when(passwordEncoderMock.encode(anyString())).thenReturn("111");
+        userService.save(userDto);
+        verify(userRepositoryMock).save(any());
     }
 
     @Test
     void deleteById_Success() {
         Long id = 1L;
-        User user = new User();
-        user.setId(id);
+        User user = createUser();
         when(userRepositoryMock.findById(anyLong())).thenReturn(java.util.Optional.of(user));
 
         userService.deleteById(id);
@@ -85,11 +76,36 @@ class UserServiceTest {
 
     @Test
     void update_Success() {
+        User user = createUser();
+        UserDto userDto = createUserDto();
+
+        when(userRepositoryMock.findById(anyLong())).thenReturn(java.util.Optional.of(user));
+        when(userRepositoryMock.save(any())).thenReturn(user);
+        userService.update(userDto);
+        verify(userRepositoryMock).save(any());
+    }
+
+    private User createUser() {
         User user = new User();
         user.setId(1L);
-        when(userRepositoryMock.findById(anyLong())).thenReturn(java.util.Optional.of(user));
+        user.setName("Oleg");
+        user.setEmail("oleg@gmail.com");
+        user.setPassword("111");
+        user.setRole(Role.ADMIN);
+        user.setActive(true);
+        user.setEvents(new ArrayList<>());
+        return user;
+    }
 
-        userService.update(user);
-        verify(userRepositoryMock).save(user);
+    private UserDto createUserDto() {
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setName("Oleg");
+        userDto.setEmail("oleg@gmail.com");
+        userDto.setPassword("111");
+        userDto.setRole(Role.ADMIN);
+        userDto.setActive(true);
+        userDto.setEventsDto(new ArrayList<>());
+        return userDto;
     }
 }

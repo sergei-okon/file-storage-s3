@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.com.sergeiokon.converter.EventConverter;
 import ua.com.sergeiokon.model.dto.EventDto;
 import ua.com.sergeiokon.service.EventService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -21,14 +19,12 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<List<EventDto>> getEvents() {
-        return ResponseEntity.ok(eventService.findAll().stream()
-                .map(EventConverter::convertToDto)
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(eventService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<EventDto> getEvent(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(EventConverter.convertToDto(eventService.findById(id)));
+        return ResponseEntity.ok(eventService.findById(id));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
