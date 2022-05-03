@@ -2,46 +2,53 @@ package ua.com.sergeiokon.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.com.sergeiokon.repository.entity.S3Property;
-import ua.com.sergeiokon.service.S3PropertiesService;
+import ua.com.sergeiokon.model.dto.UserDto;
+import ua.com.sergeiokon.service.UserService;
 
 import javax.validation.Valid;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/admin/property")
-public class AdminController {
+@RequestMapping("/v1/users")
+public class UseRestrController {
 
-    private final S3PropertiesService s3PropertiesService;
+    private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<S3Property>> getProperty() {
-        return ResponseEntity.ok(s3PropertiesService.findAll());
+    public ResponseEntity<List<UserDto>> getUsers() {
+        return ResponseEntity.ok(userService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUser(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<S3Property> addProperty(@Valid @RequestBody S3Property s3Property) {
-        S3Property savedS3Property = s3PropertiesService.save(s3Property);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedS3Property);
+    public ResponseEntity<UserDto> addUser(@Valid @RequestBody UserDto userDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userDto));
+    }
+
+    @PutMapping
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto) {
+        return ResponseEntity.ok(userService.update(userDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProperty(@PathVariable("id") Long id) {
-        s3PropertiesService.deleteById(id);
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
+        userService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
+    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(
-            EmptyResultDataAccessException ex) {
+            IllegalArgumentException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.badRequest().body(ex.getMessage());
     }

@@ -64,5 +64,4 @@ VALUES ('Sergei', 'a@gmail.com', '$2a$12$HQji1wlVdbthb/kr3jUUxOSlbiNIgcAUTlG/GcC
 
 insert into property (prop_key, prop_value)
 values ('accessKey', 'AKIAU6ALTAL4MW37ELGJ'),
-       ('secretKey', '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'),
-       ('bucket', 'file.storage.rest');
+       ('secretKey', 'X0+wPR6iMESxN8c6AtwVHHPpxnIbi+USFy4JJ5M5');

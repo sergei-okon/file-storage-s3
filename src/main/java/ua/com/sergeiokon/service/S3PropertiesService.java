@@ -18,12 +18,6 @@ public class S3PropertiesService {
         return s3PropertyRepository.findAll();
     }
 
-//    public S3Property findById(String keyProperties) {
-//        return s3PropertyRepository.findByKey(keyProperties)
-//                .orElseThrow(() -> new IllegalArgumentException("S3Properties with keyProperties "
-//                        + keyProperties + " not found"));
-//    }
-
     public S3Property save(S3Property s3property) {
         return s3PropertyRepository.save(s3property);
     }
